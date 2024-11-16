@@ -1,4 +1,4 @@
-import { Contact } from '../models/contact.js';
+import { Contact } from '../models/contacts.js';
 
 export const getContactById = async (req, res) => {
   const { contactId } = req.params;
