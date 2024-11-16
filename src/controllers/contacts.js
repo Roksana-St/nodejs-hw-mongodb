@@ -1,4 +1,17 @@
-import { Contact } from '../models/contacts.js';
+import { Contact } from '../models/contact.js';
+
+export const getAllContacts = async (req, res) => {
+  try {
+    const contacts = await Contact.find();
+    res.status(200).json({
+      status: 200,
+      message: 'Successfully found contacts!',
+      data: contacts,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 export const getContactById = async (req, res) => {
   const { contactId } = req.params;
