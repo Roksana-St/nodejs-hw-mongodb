@@ -2,10 +2,10 @@ import { Contact } from '../models/contacts.js';
 
 export const getAllContacts = async (req, res) => {
   try {
-    const contacts = await Contact.find();
+    const contacts = await Contact.find(); 
     res.status(200).json({
       status: 200,
-      message: 'Successfully found contacts!',
+      message: 'Successfully fetched all contacts!',
       data: contacts,
     });
   } catch (error) {
@@ -29,4 +29,3 @@ export const getContactById = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
