@@ -1,13 +1,12 @@
 import express from 'express';
-import { getAllContacts, getContactById } from '../controllers/contacts.js';
+import { getAllContacts, getContactById, createContact } from '../controllers/contacts.js';
+import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 
 const router = express.Router();
 
-router.get('/', getAllContacts);
-
-router.get('/:contactId', getContactById);
+router.get('/', ctrlWrapper(getAllContacts));
+router.get('/:contactId', ctrlWrapper(getContactById));
+router.post('/', ctrlWrapper(createContact)); 
+router.delete('/:contactId', ctrlWrapper(deleteContact));
 
 export default router;
-
-
-

@@ -5,8 +5,14 @@ import { initMongoConnection } from './db/initMongoConnection.js';
 import setupServer from './server.js'; 
 
 const startApp = async () => {
-  await initMongoConnection();
-  setupServer();
+  try {
+    await initMongoConnection(); 
+    setupServer(); 
+  } catch (error) {
+    console.error('Error starting the app:', error.message);
+    process.exit(1);
+  }
 };
 
 startApp();
+
