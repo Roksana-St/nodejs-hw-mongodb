@@ -50,6 +50,30 @@ export const createContact = async (req, res) => {
   });
 };
 
+export const updateContactById = async (req, res, next) => {
+  const { contactId } = req.params;
+  const updateData = req.body; 
+
+  try {
+    const updatedContact = await Contact.findByIdAndUpdate(contactId, updateData, {
+      new: true, 
+      runValidators: true, 
+    });
+
+    if (!updatedContact) {
+      throw createError(404, 'Contact not found'); 
+    }
+
+    res.status(200).json({
+      status: 200,
+      message: 'Successfully patched a contact!',
+      data: updatedContact,
+    });
+  } catch (error) {
+    next(error); 
+  }
+};
+
 export const deleteContactById = async (req, res, next) => {
   const { contactId } = req.params;
 
