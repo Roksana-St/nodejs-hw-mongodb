@@ -3,8 +3,7 @@ import jwt from 'jsonwebtoken';
 import createError from 'http-errors';
 import { User } from '../models/user.js';
 import { Session } from '../models/session.js';
-import { createNewSession } from '../services/auth.js';
-import { generateTokens } from '../services/auth.js';
+import { createNewSession, generateTokens } from '../services/auth.js';
 
 export const register = async (req, res) => {
   const { name, email, password } = req.body;
@@ -68,7 +67,6 @@ export const refreshSession = async (req, res, next) => {
     next(error);  
   }
 };
-
 
 export const logout = async (req, res) => {
   const session = await Session.findOneAndDelete({ refreshToken: req.cookies.refreshToken });

@@ -11,9 +11,19 @@ export const generateTokens = async (refreshToken) => {
   }
 
   const accessToken = jwt.sign({ userId: session.userId }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
-  const refreshToken = jwt.sign({ userId: session.userId }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30d' });
+  const newRefreshToken = jwt.sign({ userId: session.userId }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30d' });
 
-  await Session.findByIdAndUpdate(session._id, { accessToken, refreshToken });
+  await Session.findByIdAndUpdate(session._id, { accessToken, refreshToken: newRefreshToken });
+
+  return { accessToken, refreshToken: newRefreshToken };
+};
+
+export const createNewSession = async (user) => {
+  const accessToken = jwt.sign({ userId: user._id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+  const refreshToken = jwt.sign({ userId: user._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30d' });
+
+  const newSession = new Session({ userId: user._id, accessToken, refreshToken });
+  await newSession.save();
 
   return { accessToken, refreshToken };
 };
