@@ -11,8 +11,9 @@ const contactSchema = new mongoose.Schema(
       enum: ['work', 'home', 'personal'],
       required: true,
     },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, 
   },
   { timestamps: true }
 );
 
-export const Contact = mongoose.model('contact', contactSchema);
+export const Contact = mongoose.model('Contact', contactSchema);
