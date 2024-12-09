@@ -4,6 +4,7 @@ import createError from 'http-errors';
 import { User } from '../models/user.js';
 import { Session } from '../models/session.js';
 import { createNewSession } from '../services/auth.js';
+import { generateTokens } from '../services/auth.js';
 
 export const register = async (req, res) => {
   const { name, email, password } = req.body;
@@ -47,24 +48,27 @@ export const login = async (req, res) => {
   });
 };
 
-export const refreshSession = async (req, res) => {
-  const refreshToken = req.cookies.refreshToken;
+export const refreshSession = async (req, res, next) => {
+  const { refreshToken } = req.body;
+
   if (!refreshToken) {
-    throw createError(401, 'No refresh token found');
+    throw createHttpError(400, 'Refresh token is required');
   }
 
-  const session = await Session.findOne({ refreshToken });
-  if (!session) {
-    throw createError(401, 'Invalid refresh token');
+  try {
+    const newTokens = await generateTokens(refreshToken);
+    res.status(200).json({
+      status: 200,
+      message: 'Successfully refreshed a session!',
+      data: {
+        accessToken: newTokens.accessToken,
+      },
+    });
+  } catch (error) {
+    next(error);  
   }
-
-  const newSession = await createNewSession(session.userId);
-  res.status(200).json({
-    status: 200,
-    message: 'Successfully refreshed a session!',
-    data: { accessToken: newSession.accessToken },
-  });
 };
+
 
 export const logout = async (req, res) => {
   const session = await Session.findOneAndDelete({ refreshToken: req.cookies.refreshToken });
