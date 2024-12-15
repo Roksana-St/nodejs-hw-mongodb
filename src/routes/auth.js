@@ -1,9 +1,12 @@
 import express from 'express';
-import { register, login, refreshSession, logout } from '../controllers/auth.js';
+import { register, login, refreshSession, logout, sendResetEmail, resetPassword } from '../controllers/auth.js';
 import { validateBody } from '../middlewares/validateBody.js';
-import { userSchema, loginSchema } from '../utils/schemas.js';
+import { userSchema, loginSchema, emailSchema, resetPasswordSchema } from '../utils/schemas.js';
 
 const router = express.Router();
+
+router.post('/send-reset-email', validateBody(emailSchema), sendResetEmail);
+router.post('/reset-pwd', validateBody(resetPasswordSchema), resetPassword);
 
 router.post('/register', validateBody(userSchema), register);
 router.post('/login', validateBody(loginSchema), login);
