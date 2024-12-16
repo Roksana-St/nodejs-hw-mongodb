@@ -1,7 +1,7 @@
 import createError from 'http-errors';
 import { Contact } from '../models/contacts.js';
 import { fetchAllContacts, createNewContact, updateContactByIdService, deleteContactById } from '../services/contacts.js';
-import { saveFileToCloudinary } from '../services/cloudinary.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
 export const uploadFile = async (req, res) => {
   try {
