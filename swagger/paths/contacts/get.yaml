@@ -1,0 +1,31 @@
+tags:
+  - Contacts
+summary: Отримання всіх контактів
+operationId: getAllContacts
+description: Отримання списку контактів
+security:
+  - bearerAuth: []
+parameters:
+  - name: page
+    in: query
+    required: false
+    description: Номер сторінки
+    schema:
+      type: integer
+      default: 1
+  - name: limit
+    in: query
+    required: false
+    description: Ліміт контактів на сторінку
+    schema:
+      type: integer
+      default: 10
+responses:
+  200:
+    description: Список контактів
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            $ref: ../../components/schemas/Contact.yaml

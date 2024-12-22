@@ -1,0 +1,30 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: Contacts API
+  description: API для керування контактами
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: http://localhost:3000
+  - url: https://<ваш-деплой-сайт>
+tags:
+  - name: Contacts
+    description: Ендпоінти для роботи з контактами
+paths:
+  /contacts/{contactId}:
+    $ref: ../swagger/paths/contacts/{id}/get.yaml
+  /contacts:
+    $ref: ../swagger/paths/contacts/get.yaml
+  /contacts/{contactId}:
+    patch:
+      $ref: ../swagger/paths/contacts/{id}/patch.yaml
+    delete:
+      $ref: ../swagger/paths/contacts/{id}/delete.yaml
+  /contacts:
+    post:
+      $ref: ../swagger/paths/contacts/post.yaml
+components:
+  $ref: ../swagger/components/index.yaml
+

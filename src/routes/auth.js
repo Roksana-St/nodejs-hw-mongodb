@@ -2,6 +2,20 @@ import express from 'express';
 import { register, login, refreshSession, logout, sendResetEmail, resetPassword } from '../controllers/auth.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import { userSchema, loginSchema, emailSchema, resetPasswordSchema } from '../utils/schemas.js';
+import { getGoogleOAuthUrlController } from '../controllers/auth.js';
+
+import { loginWithGoogleOAuthSchema } from '../validation/auth.js';
+import { loginWithGoogleController } from '../controllers/auth.js';
+
+
+router.post(
+  '/confirm-oauth',
+  validateBody(loginWithGoogleOAuthSchema),
+  ctrlWrapper(loginWithGoogleController),
+);
+
+
+router.get('/get-oauth-url', ctrlWrapper(getGoogleOAuthUrlController));
 
 const router = express.Router();
 
