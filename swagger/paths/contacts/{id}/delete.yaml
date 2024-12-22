@@ -4,7 +4,7 @@ summary: Видалення контакту за ідентифікатором
 operationId: deleteContactById
 description: Цей ендпоінт дозволяє видалити контакт за його унікальним ідентифікатором.
 security:
-  - BearerAuth: []
+  - bearerAuth: []
 parameters:
   - name: contactId
     in: path
@@ -20,4 +20,4 @@ responses:
     content:
       application/json:
         schema:
-          $ref: '../../components/schemas/ErrorResponse.yaml'
+          $ref: '../../../components/schemas/ErrorResponse.yaml'

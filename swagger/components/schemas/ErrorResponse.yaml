@@ -1,9 +1,7 @@
 type: object
 properties:
-  status:
-    type: integer
   message:
     type: string
+    description: Опис помилки
 required:
-  - status
   - message

@@ -4,7 +4,7 @@ summary: Отримання контакту за ідентифікатором
 operationId: getContactById
 description: Цей ендпоінт дозволяє отримати деталі конкретного контакту за його унікальним ідентифікатором.
 security:
-  - BearerAuth: []
+  - bearerAuth: []
 parameters:
   - name: contactId
     in: path
@@ -18,10 +18,10 @@ responses:
     content:
       application/json:
         schema:
-          $ref: '../../components/schemas/Contact.yaml'
+          $ref: '../../../components/schemas/Contact.yaml'
   '404':
     description: Контакт не знайдений
     content:
       application/json:
         schema:
-          $ref: '../../components/schemas/ErrorResponse.yaml'
+          $ref: '../../../components/schemas/ErrorResponse.yaml'

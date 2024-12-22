@@ -1,22 +1,19 @@
 type: object
 properties:
-  _id:
+  id:
     type: string
+    description: Унікальний ідентифікатор контакту
   name:
     type: string
+    description: Ім'я контакту
   email:
     type: string
+    description: Адреса електронної пошти
   phone:
     type: string
-  address:
-    type: string
-  createdAt:
-    type: string
-    format: date-time
-  updatedAt:
-    type: string
-    format: date-time
+    description: Номер телефону
 required:
-  - _id
+  - id
   - name
   - email
+  - phone

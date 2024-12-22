@@ -4,7 +4,7 @@ summary: Отримання списку контактів
 operationId: getContacts
 description: Цей ендпоінт дозволяє отримати список всіх контактів з можливістю фільтрації.
 security:
-  - BearerAuth: []
+  - bearerAuth: []
 parameters:
   - name: search
     in: query
