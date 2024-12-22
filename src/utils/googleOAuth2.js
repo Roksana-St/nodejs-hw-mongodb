@@ -3,15 +3,16 @@ import { OAuth2Client } from 'google-auth-library';
 import path from 'node:path';
 import { readFile } from 'fs/promises';
 
-import { env } from './env.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const PATH_JSON = path.join(process.cwd(), 'google-oauth.json');
 
 const oauthConfig = JSON.parse(await readFile(PATH_JSON));
 
 const googleOAuthClient = new OAuth2Client({
-  clientId: env('GOOGLE_AUTH_CLIENT_ID'),
-  clientSecret: env('GOOGLE_AUTH_CLIENT_SECRET'),
+  clientId: process.env.GOOGLE_AUTH_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET,
   redirectUri: oauthConfig.web.redirect_uris[0],
 });
 
@@ -23,8 +24,7 @@ export const generateAuthUrl = () =>
     ],
   });
 
-
-  export const validateCode = async (code) => {
+export const validateCode = async (code) => {
   const response = await googleOAuthClient.getToken(code);
   if (!response.tokens.id_token) throw createHttpError(401, 'Unauthorized');
 

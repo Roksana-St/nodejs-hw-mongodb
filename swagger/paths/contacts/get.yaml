@@ -1,31 +1,29 @@
 tags:
   - Contacts
-summary: Отримання всіх контактів
-operationId: getAllContacts
-description: Отримання списку контактів
+summary: Отримання списку контактів
+operationId: getContacts
+description: Цей ендпоінт дозволяє отримати список всіх контактів з можливістю фільтрації.
 security:
-  - bearerAuth: []
+  - BearerAuth: []
 parameters:
-  - name: page
+  - name: search
     in: query
+    description: Пошуковий запит для фільтрації контактів
     required: false
-    description: Номер сторінки
     schema:
-      type: integer
-      default: 1
-  - name: limit
-    in: query
-    required: false
-    description: Ліміт контактів на сторінку
-    schema:
-      type: integer
-      default: 10
+      type: string
 responses:
-  200:
-    description: Список контактів
+  '200':
+    description: Успішно отримано список контактів
     content:
       application/json:
         schema:
           type: array
           items:
-            $ref: ../../components/schemas/Contact.yaml
+            $ref: '../../components/schemas/Contact.yaml'
+  '401':
+    description: Не авторизовано
+    content:
+      application/json:
+        schema:
+          $ref: '../../components/schemas/ErrorResponse.yaml'

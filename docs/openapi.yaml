@@ -25,6 +25,4 @@ paths:
   /contacts:
     post:
       $ref: ../swagger/paths/contacts/post.yaml
-components:
-  $ref: ../swagger/components/index.yaml
 

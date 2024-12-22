@@ -1,0 +1,39 @@
+tags:
+  - Contacts
+summary: Оновлення контакту за ідентифікатором
+operationId: updateContactById
+description: Цей ендпоінт дозволяє оновити дані конкретного контакту за його унікальним ідентифікатором.
+security:
+  - BearerAuth: []
+parameters:
+  - name: contactId
+    in: path
+    required: true
+    description: Унікальний ідентифікатор контакту для оновлення
+    schema:
+      type: string
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: '../../components/schemas/Contact.yaml'
+responses:
+  '200':
+    description: Успішно оновлено контакт
+    content:
+      application/json:
+        schema:
+          $ref: '../../components/schemas/Contact.yaml'
+  '404':
+    description: Контакт не знайдений
+    content:
+      application/json:
+        schema:
+          $ref: '../../components/schemas/ErrorResponse.yaml'
+  '400':
+    description: Невірні дані
+    content:
+      application/json:
+        schema:
+          $ref: '../../components/schemas/ErrorResponse.yaml'

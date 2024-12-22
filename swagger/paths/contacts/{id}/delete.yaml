@@ -1,0 +1,23 @@
+tags:
+  - Contacts
+summary: Видалення контакту за ідентифікатором
+operationId: deleteContactById
+description: Цей ендпоінт дозволяє видалити контакт за його унікальним ідентифікатором.
+security:
+  - BearerAuth: []
+parameters:
+  - name: contactId
+    in: path
+    required: true
+    description: Унікальний ідентифікатор контакту для видалення
+    schema:
+      type: string
+responses:
+  '204':
+    description: Успішно видалено контакт
+  '404':
+    description: Контакт не знайдений
+    content:
+      application/json:
+        schema:
+          $ref: '../../components/schemas/ErrorResponse.yaml'

@@ -3,19 +3,15 @@ import { register, login, refreshSession, logout, sendResetEmail, resetPassword 
 import { validateBody } from '../middlewares/validateBody.js';
 import { userSchema, loginSchema, emailSchema, resetPasswordSchema } from '../utils/schemas.js';
 import { getGoogleOAuthUrlController } from '../controllers/auth.js';
+import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 
 import { loginWithGoogleOAuthSchema } from '../validation/auth.js';
 import { loginWithGoogleController } from '../controllers/auth.js';
 
 
-router.post(
-  '/confirm-oauth',
-  validateBody(loginWithGoogleOAuthSchema),
-  ctrlWrapper(loginWithGoogleController),
-);
 
 
-router.get('/get-oauth-url', ctrlWrapper(getGoogleOAuthUrlController));
+
 
 const router = express.Router();
 
@@ -26,5 +22,12 @@ router.post('/register', validateBody(userSchema), register);
 router.post('/login', validateBody(loginSchema), login);
 router.post('/refresh', refreshSession);
 router.post('/logout', logout);
+router.get('/get-oauth-url', ctrlWrapper(getGoogleOAuthUrlController));
+router.post(
+  '/confirm-oauth',
+  validateBody(loginWithGoogleOAuthSchema),
+  ctrlWrapper(loginWithGoogleController),
+);
+
 
 export default router;

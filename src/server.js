@@ -11,7 +11,6 @@ import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 const swaggerDocument = YAML.load('./docs/openapi.yaml');
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
 export const setupServer = () => {
@@ -25,6 +24,9 @@ export const setupServer = () => {
   app.use('/contacts', contactsRouter);
   
   app.use('/auth', authRouter); 
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 
   app.use(notFoundHandler);
   app.use(errorHandler);
