@@ -27,13 +27,21 @@ export const uploadFile = async (req, res) => {
 
 
 export const getAllContacts = async (req, res) => {
-  const contacts = await fetchAllContacts(req.user._id);
+  const { page = 1, limit = 10 } = req.query;
+  const result = await fetchAllContacts(req.user.userId, Number(page), Number(limit));
+
   res.status(200).json({
     status: 200,
-    message: 'Successfully found contacts!',
-    data: contacts,
+    message: 'Successfully fetched contacts',
+    data: result.contacts,
+    pagination: {
+      total: result.total,
+      page: result.page,
+      pages: result.pages,
+    },
   });
 };
+
 
 export const createContact = async (req, res) => {
   try {
@@ -50,13 +58,13 @@ export const createContact = async (req, res) => {
       email,
       isFavourite,
       contactType,
-      userId: req.user._id,
+      userId: req.user.userId,
       photo: photoUrl,
     });
 
     res.status(201).json({
       status: 201,
-      message: 'Successfully created a contact!',
+      message: 'Successfully created a contact',
       data: newContact,
     });
   } catch (error) {
@@ -67,6 +75,7 @@ export const createContact = async (req, res) => {
     });
   }
 };
+
 
 export const updateContact = async (req, res) => {
   try {

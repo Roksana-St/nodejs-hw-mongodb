@@ -1,8 +1,13 @@
 import { Contact } from '../models/contacts.js';
 
-export const fetchAllContacts = async () => {
-  return await Contact.find();
+export const fetchAllContacts = async (userId, page = 1, limit = 10) => {
+  const skip = (page - 1) * limit;
+  const contacts = await Contact.find({ userId }).skip(skip).limit(limit);
+  const total = await Contact.countDocuments({ userId });
+
+  return { contacts, total, page, pages: Math.ceil(total / limit) };
 };
+
 
 export const createNewContact = async (contactData) => {
   const contact = new Contact(contactData);
