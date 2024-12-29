@@ -31,7 +31,7 @@ export const getAllContacts = async (req, res) => {
   const result = await fetchAllContacts(req.user.userId, Number(page), Number(limit));
 
   res.status(200).json({
-    status: 200,
+    status: 'success',
     message: 'Successfully fetched contacts',
     data: result.contacts,
     pagination: {
@@ -39,6 +39,21 @@ export const getAllContacts = async (req, res) => {
       page: result.page,
       pages: result.pages,
     },
+  });
+};
+
+export const getContactById = async (req, res) => {
+  const { contactId } = req.params;
+  const contact = await Contact.findById(contactId);
+
+  if (!contact) {
+    throw createError(404, 'Contact not found');
+  }
+
+  res.status(200).json({
+    status: 'success',
+    message: `Successfully found contact with id ${contactId}`,
+    data: contact,
   });
 };
 
@@ -108,4 +123,16 @@ export const updateContact = async (req, res) => {
       error: error.message,
     });
   }
+};
+
+export const deleteContact = async (req, res) => {
+  const { contactId } = req.params;
+
+  const contact = await deleteContactById(contactId);
+
+  if (!contact) {
+    throw createError(404, 'Contact not found');
+  }
+
+  res.status(204).send();
 };

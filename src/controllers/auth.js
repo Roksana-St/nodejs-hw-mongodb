@@ -73,24 +73,59 @@ export const login = ctrlWrapper(async (req, res) => {
   }
 
   const session = await createNewSession(user);
-  res.status(200).json({ accessToken: session.accessToken, refreshToken: session.refreshToken });
+
+  res
+    .cookie('refreshToken', session.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 30 * 24 * 60 * 60 * 1000, 
+    })
+    .status(200)
+    .json({
+      accessToken: session.accessToken,
+    });
 });
 
+
 export const refreshSession = ctrlWrapper(async (req, res) => {
-  const { refreshToken } = req.body;
+  const refreshToken = req.cookies.refreshToken; 
   if (!refreshToken) {
     throw createError(400, 'Refresh token is required');
   }
 
   const tokens = await generateTokens(refreshToken);
-  res.status(200).json(tokens);
+
+  res
+    .cookie('refreshToken', tokens.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    })
+    .status(200)
+    .json({
+      accessToken: tokens.accessToken,
+    });
 });
+
+
 
 export const logout = ctrlWrapper(async (req, res) => {
-  const session = await Session.findOneAndDelete({ refreshToken: req.cookies.refreshToken });
-  if (!session) {
-    throw createError(404, 'Session not found');
+  const { refreshToken } = req.cookies;
+  if (!refreshToken) {
+    throw createError(400, 'Refresh token is missing');
   }
 
-  res.status(204).send();
+  await Session.findOneAndDelete({ refreshToken });
+
+  res
+    .clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    })
+    .status(204)
+    .send();
 });
+
