@@ -27,17 +27,40 @@ export const uploadFile = async (req, res) => {
 
 
 export const getAllContacts = async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
-  const result = await fetchAllContacts(req.user.userId, Number(page), Number(limit));
+  const { page = 1, perPage = 10, sortBy = 'name', sortOrder = 'asc', type, isFavourite } = req.query;
+
+  const currentPage = parseInt(page, 10);
+  const limit = parseInt(perPage, 10);
+  const skip = (currentPage - 1) * limit;
+
+  const sortOptions = {
+    [sortBy]: sortOrder === 'desc' ? -1 : 1, 
+  };
+
+  const filter = {};
+  if (type) {
+    filter.contactType = type;
+  }
+  if (isFavourite !== undefined) {
+    filter.isFavourite = isFavourite === 'true';
+  }
+
+  const totalItems = await Contact.countDocuments(filter);
+  const contacts = await Contact.find(filter).sort(sortOptions).skip(skip).limit(limit);
+
+  const totalPages = Math.ceil(totalItems / limit);
 
   res.status(200).json({
-    status: 'success',
-    message: 'Successfully fetched contacts',
-    data: result.contacts,
-    pagination: {
-      total: result.total,
-      page: result.page,
-      pages: result.pages,
+    status: 200,
+    message: 'Successfully found contacts!',
+    data: {
+      data: contacts,
+      page: currentPage,
+      perPage: limit,
+      totalItems,
+      totalPages,
+      hasPreviousPage: currentPage > 1,
+      hasNextPage: currentPage < totalPages,
     },
   });
 };
@@ -136,3 +159,6 @@ export const deleteContact = async (req, res) => {
 
   res.status(204).send();
 };
+
+
+

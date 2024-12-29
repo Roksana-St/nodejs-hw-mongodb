@@ -64,6 +64,8 @@ export const register = ctrlWrapper(async (req, res) => {
   res.status(201).json({ name: newUser.name, email: newUser.email });
 });
 
+
+
 export const login = ctrlWrapper(async (req, res) => {
   const { email, password } = req.body;
 
