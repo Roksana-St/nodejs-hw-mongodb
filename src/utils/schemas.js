@@ -38,3 +38,6 @@ export const contactUpdateSchema = Joi.object({
 }).or('name', 'phoneNumber', 'email', 'isFavourite', 'contactType');
 
 
+
+
+

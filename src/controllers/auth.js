@@ -61,7 +61,11 @@ export const register = ctrlWrapper(async (req, res) => {
   const newUser = new User({ name, email, password: hashedPassword });
   await newUser.save();
 
-  res.status(201).json({ name: newUser.name, email: newUser.email });
+  res.status(201).json({
+    status: 201,
+    message: 'User successfully registered',
+    data: { name: newUser.name, email: newUser.email },
+  });
 });
 
 
@@ -81,17 +85,19 @@ export const login = ctrlWrapper(async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 30 * 24 * 60 * 60 * 1000, 
+      maxAge: 30 * 24 * 60 * 60 * 1000,
     })
     .status(200)
     .json({
-      accessToken: session.accessToken,
+      status: 200,
+      message: 'Login successful',
+      data: { accessToken: session.accessToken },
     });
 });
 
 
 export const refreshSession = ctrlWrapper(async (req, res) => {
-  const refreshToken = req.cookies.refreshToken; 
+  const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) {
     throw createError(400, 'Refresh token is required');
   }
@@ -107,9 +113,12 @@ export const refreshSession = ctrlWrapper(async (req, res) => {
     })
     .status(200)
     .json({
-      accessToken: tokens.accessToken,
+      status: 200,
+      message: 'Tokens refreshed successfully',
+      data: { accessToken: tokens.accessToken },
     });
 });
+
 
 
 
@@ -127,7 +136,12 @@ export const logout = ctrlWrapper(async (req, res) => {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
     })
-    .status(204)
-    .send();
+    .status(200)
+    .json({
+      status: 200,
+      message: 'Logout successful',
+      data: null,
+    });
 });
+
 
