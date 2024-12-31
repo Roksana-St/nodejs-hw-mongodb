@@ -6,12 +6,20 @@ import contactsRouter from './routes/contacts.js';
 import authRouter from './routes/auth.js'; 
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import cookieParser from 'cookie-parser';
+
+
 
 export const setupServer = () => {
   const app = express();
   const logger = pino();
+app.use(cookieParser());
 
   app.use(cors());
+  app.use(cors({
+  origin: process.env.APP_DOMAIN,
+  credentials: true, 
+}));
   app.use(express.json());
   app.use(pinoHttp({ logger }));
 
@@ -23,10 +31,7 @@ export const setupServer = () => {
   app.use(errorHandler);
 
 
-app.use(cors({
-  origin: process.env.APP_DOMAIN,
-  credentials: true, 
-}));
+
 
 
   const PORT = process.env.PORT || 3000;
