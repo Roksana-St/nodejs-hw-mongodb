@@ -14,6 +14,7 @@ cloudinary.v2.config({
 export const saveFileToCloudinary = async (file) => {
   try {
     const filePath = path.resolve(file.path); 
+     console.log('File path:', filePath);
     const result = await cloudinary.v2.uploader.upload(filePath, {
       folder: 'contacts',
       resource_type: 'image',
