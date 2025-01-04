@@ -79,6 +79,8 @@ export const login = ctrlWrapper(async (req, res) => {
   }
 
   const session = await createNewSession(user);
+  console.log('New session created:', session);
+
 
   res
     .cookie('refreshToken', session.refreshToken, {
@@ -97,12 +99,15 @@ export const login = ctrlWrapper(async (req, res) => {
 
 
 export const refreshSession = ctrlWrapper(async (req, res) => {
+  console.log('Refresh cookie:', req.cookies.refreshToken); 
   const refreshToken = req.cookies.refreshToken;
+
   if (!refreshToken) {
     throw createError(400, 'Refresh token is required');
   }
 
   const tokens = await generateTokens(refreshToken);
+  console.log('New tokens:', tokens); 
 
   res
     .cookie('refreshToken', tokens.refreshToken, {
@@ -122,13 +127,23 @@ export const refreshSession = ctrlWrapper(async (req, res) => {
 
 
 
+
 export const logout = ctrlWrapper(async (req, res) => {
+  console.log('Cookies:', req.cookies); 
   const { refreshToken } = req.cookies;
+
   if (!refreshToken) {
     throw createError(400, 'Refresh token is missing');
   }
 
-  await Session.findOneAndDelete({ refreshToken });
+  const session = await Session.findOne({ refreshToken });
+  console.log('Found session:', session); 
+
+  if (!session) {
+    throw createError(404, 'Session not found');
+  }
+
+  await Session.deleteOne({ refreshToken });
 
   res
     .clearCookie('refreshToken', {
@@ -143,5 +158,6 @@ export const logout = ctrlWrapper(async (req, res) => {
       data: null,
     });
 });
+
 
 

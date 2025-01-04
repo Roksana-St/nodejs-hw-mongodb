@@ -28,22 +28,17 @@ export const uploadFile = async (req, res) => {
 
 export const getAllContacts = async (req, res) => {
   const { page = 1, perPage = 10, sortBy = 'name', sortOrder = 'asc', type, isFavourite } = req.query;
+  const userId = req.user.userId; 
 
   const currentPage = parseInt(page, 10);
   const limit = parseInt(perPage, 10);
   const skip = (currentPage - 1) * limit;
 
-  const sortOptions = {
-    [sortBy]: sortOrder === 'desc' ? -1 : 1, 
-  };
+  const sortOptions = { [sortBy]: sortOrder === 'desc' ? -1 : 1 };
 
-  const filter = {};
-  if (type) {
-    filter.contactType = type;
-  }
-  if (isFavourite !== undefined) {
-    filter.isFavourite = isFavourite === 'true';
-  }
+  const filter = { userId }; 
+  if (type) filter.contactType = type;
+  if (isFavourite !== undefined) filter.isFavourite = isFavourite === 'true';
 
   const totalItems = await Contact.countDocuments(filter);
   const contacts = await Contact.find(filter).sort(sortOptions).skip(skip).limit(limit);
@@ -65,12 +60,15 @@ export const getAllContacts = async (req, res) => {
   });
 };
 
+
 export const getContactById = async (req, res) => {
   const { contactId } = req.params;
-  const contact = await Contact.findById(contactId);
+  const userId = req.user.userId; 
+
+  const contact = await Contact.findOne({ _id: contactId, userId });
 
   if (!contact) {
-    throw createError(404, 'Contact not found');
+    throw createError(404, 'Contact not found or does not belong to this user');
   }
 
   res.status(200).json({
@@ -79,6 +77,7 @@ export const getContactById = async (req, res) => {
     data: contact,
   });
 };
+
 
 
 export const createContact = async (req, res) => {
