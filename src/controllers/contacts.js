@@ -61,7 +61,6 @@ export const getAllContacts = async (req, res) => {
 };
 
 
-import { findContactByIdAndOwner } from '../services/contacts.js';
 
 export const getContactById = async (req, res) => {
   const { contactId } = req.params;
