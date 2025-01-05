@@ -8,6 +8,11 @@ export const fetchAllContacts = async (userId, page = 1, limit = 10) => {
   return { contacts, total, page, pages: Math.ceil(total / limit) };
 };
 
+export const findContactByIdAndOwner = async (contactId, userId) => {
+  return await Contact.findOne({ _id: contactId, userId }); 
+};
+
+
 
 export const createNewContact = async (contactData) => {
   const contact = new Contact(contactData);

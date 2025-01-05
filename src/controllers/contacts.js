@@ -1,6 +1,6 @@
 import createError from 'http-errors';
 import { Contact } from '../models/contacts.js';
-import { fetchAllContacts, createNewContact, updateContactByIdService, deleteContactById } from '../services/contacts.js';
+import { fetchAllContacts, createNewContact, updateContactByIdService, deleteContactById, findContactByIdAndOwner } from '../services/contacts.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
 export const uploadFile = async (req, res) => {
@@ -118,20 +118,19 @@ export const updateContact = async (req, res) => {
   try {
     const { contactId } = req.params;
     const updateData = req.body;
+    const userId = req.user.userId;
 
     if (req.file) {
       const photoUrl = await saveFileToCloudinary(req.file);
-      updateData.photo = photoUrl; 
+      updateData.photo = photoUrl;
+    }
+
+    const contact = await findContactByIdAndOwner(contactId, userId); 
+    if (!contact) {
+      throw createError(404, 'Contact not found or does not belong to this user');
     }
 
     const updatedContact = await updateContactByIdService(contactId, updateData);
-
-    if (!updatedContact) {
-      return res.status(404).json({
-        status: 404,
-        message: 'Contact not found',
-      });
-    }
 
     res.status(200).json({
       status: 200,
@@ -147,17 +146,21 @@ export const updateContact = async (req, res) => {
   }
 };
 
+
 export const deleteContact = async (req, res) => {
   const { contactId } = req.params;
+  const userId = req.user.userId;
 
-  const contact = await deleteContactById(contactId);
-
+  const contact = await findContactByIdAndOwner(contactId, userId); 
   if (!contact) {
-    throw createError(404, 'Contact not found');
+    throw createError(404, 'Contact not found or does not belong to this user');
   }
+
+  await deleteContactById(contactId);
 
   res.status(204).send();
 };
+
 
 
 

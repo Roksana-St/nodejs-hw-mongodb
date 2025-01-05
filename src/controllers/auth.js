@@ -129,7 +129,7 @@ export const refreshSession = ctrlWrapper(async (req, res) => {
 
 
 export const logout = ctrlWrapper(async (req, res) => {
-  console.log('Cookies:', req.cookies); 
+  console.log('Cookies:', req.cookies);
   const { refreshToken } = req.cookies;
 
   if (!refreshToken) {
@@ -137,7 +137,7 @@ export const logout = ctrlWrapper(async (req, res) => {
   }
 
   const session = await Session.findOne({ refreshToken });
-  console.log('Found session:', session); 
+  console.log('Found session:', session);
 
   if (!session) {
     throw createError(404, 'Session not found');
@@ -145,19 +145,15 @@ export const logout = ctrlWrapper(async (req, res) => {
 
   await Session.deleteOne({ refreshToken });
 
-  res
-    .clearCookie('refreshToken', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-    })
-    .status(200)
-    .json({
-      status: 200,
-      message: 'Logout successful',
-      data: null,
-    });
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+  });
+
+  res.status(204).send(); 
 });
+
 
 
 
