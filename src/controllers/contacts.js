@@ -61,11 +61,13 @@ export const getAllContacts = async (req, res) => {
 };
 
 
+import { findContactByIdAndOwner } from '../services/contacts.js';
+
 export const getContactById = async (req, res) => {
   const { contactId } = req.params;
-  const userId = req.user.userId; 
+  const userId = req.user.userId;
 
-  const contact = await Contact.findOne({ _id: contactId, userId });
+  const contact = await findContactByIdAndOwner(contactId, userId); 
 
   if (!contact) {
     throw createError(404, 'Contact not found or does not belong to this user');
@@ -77,6 +79,7 @@ export const getContactById = async (req, res) => {
     data: contact,
   });
 };
+
 
 
 
