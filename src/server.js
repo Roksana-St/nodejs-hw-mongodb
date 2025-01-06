@@ -6,7 +6,7 @@ import contactsRouter from './routes/contacts.js';
 import authRouter from './routes/auth.js'; 
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
-
+import cookieParser from 'cookie-parser';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 const swaggerDocument = YAML.load('./docs/openapi.yaml');
@@ -16,8 +16,13 @@ const swaggerDocument = YAML.load('./docs/openapi.yaml');
 export const setupServer = () => {
   const app = express();
   const logger = pino();
+app.use(cookieParser());
 
   app.use(cors());
+  app.use(cors({
+  origin: process.env.APP_DOMAIN,
+  credentials: true, 
+}));
   app.use(express.json());
   app.use(pinoHttp({ logger }));
 
@@ -25,11 +30,14 @@ export const setupServer = () => {
   
   app.use('/auth', authRouter); 
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
   app.use(notFoundHandler);
   app.use(errorHandler);
+
+
+
+
 
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {

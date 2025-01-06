@@ -18,8 +18,10 @@ export const sendEmail = async (to, subject, html) => {
       subject,
       html,
     });
+    console.log(`Email sent: ${info.response}`);
     return info;
   } catch (error) {
-    throw new Error('Failed to send the email, please try again later.');
+    console.error('Error sending email:', error.message);
+    throw new Error('Failed to send email. Please check SMTP settings.');
   }
 };

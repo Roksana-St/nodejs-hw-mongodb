@@ -1,17 +1,9 @@
 import express from 'express';
-import { register, login, refreshSession, logout, sendResetEmail, resetPassword } from '../controllers/auth.js';
+import { register, login, refreshSession, logout, sendResetEmail, resetPassword, getGoogleOAuthUrlController, loginWithGoogleController } from '../controllers/auth.js';
 import { validateBody } from '../middlewares/validateBody.js';
-import { userSchema, loginSchema, emailSchema, resetPasswordSchema } from '../utils/schemas.js';
-import { getGoogleOAuthUrlController } from '../controllers/auth.js';
-import { ctrlWrapper } from '../utils/ctrlWrapper.js';
-
 import { loginWithGoogleOAuthSchema } from '../validation/auth.js';
-import { loginWithGoogleController } from '../controllers/auth.js';
-
-
-
-
-
+import { ctrlWrapper } from '../utils/ctrlWrapper.js';
+import { userSchema, loginSchema, emailSchema, resetPasswordSchema } from '../utils/schemas.js';
 
 const router = express.Router();
 
@@ -28,6 +20,5 @@ router.post(
   validateBody(loginWithGoogleOAuthSchema),
   ctrlWrapper(loginWithGoogleController),
 );
-
 
 export default router;
