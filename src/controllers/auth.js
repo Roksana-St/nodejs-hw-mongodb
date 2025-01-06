@@ -143,7 +143,7 @@ export const logout = ctrlWrapper(async (req, res) => {
     throw createError(404, 'Session not found');
   }
 
-  await Session.deleteOne({ refreshToken });
+  await Session.deleteMany({ userId: session.userId });
 
   res.clearCookie('refreshToken', {
     httpOnly: true,
@@ -151,7 +151,7 @@ export const logout = ctrlWrapper(async (req, res) => {
     sameSite: 'strict',
   });
 
-  res.status(204).send(); 
+  res.status(204).send();
 });
 
 

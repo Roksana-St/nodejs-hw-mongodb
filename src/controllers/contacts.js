@@ -153,15 +153,15 @@ export const deleteContact = async (req, res) => {
   const { contactId } = req.params;
   const userId = req.user.userId;
 
-  const contact = await findContactByIdAndOwner(contactId, userId); 
-  if (!contact) {
+  const deletedContact = await deleteContactById(contactId, userId);
+
+  if (!deletedContact) {
     throw createError(404, 'Contact not found or does not belong to this user');
   }
 
-  await deleteContactById(contactId);
-
-  res.status(204).send();
+  res.status(204).send(); 
 };
+
 
 
 

@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken';
 import createError from 'http-errors';
+import { Session } from '../models/session.js';
 
-export const authenticate = (req, res, next) => {
+export const authenticate = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -12,10 +13,15 @@ export const authenticate = (req, res, next) => {
 
   try {
     const payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+
+    const activeSession = await Session.findOne({ userId: payload.userId, accessToken: token });
+    if (!activeSession) {
+      return next(createError(401, 'Session expired or invalid token'));
+    }
+
     req.user = payload;
     next();
   } catch (error) {
     next(createError(401, 'Unauthorized'));
   }
 };
-

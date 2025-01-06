@@ -19,14 +19,16 @@ export const createNewContact = async (contactData) => {
   return await contact.save();
 };
 
-export const updateContactByIdService = async (contactId, updateData) => {
-  return Contact.findByIdAndUpdate(contactId, updateData, {
-    new: true,
-    runValidators: true,
-  });
+export const updateContactByIdService = async (contactId, userId, updateData) => {
+  return await Contact.findOneAndUpdate(
+    { _id: contactId, userId }, 
+    updateData,
+    { new: true, runValidators: true }
+  );
 };
 
-export const deleteContactById = async (contactId) => {
-  return await Contact.findByIdAndDelete(contactId); 
+export const deleteContactById = async (contactId, userId) => {
+  return await Contact.findOneAndDelete({ _id: contactId, userId }); 
 };
+
 
