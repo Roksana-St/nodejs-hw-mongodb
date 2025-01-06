@@ -132,7 +132,7 @@ export const updateContact = async (req, res) => {
       throw createError(404, 'Contact not found or does not belong to this user');
     }
 
-    const updatedContact = await updateContactByIdService(contactId, updateData);
+    const updatedContact = await updateContactByIdService(contactId, userId, updateData);
 
     res.status(200).json({
       status: 200,
